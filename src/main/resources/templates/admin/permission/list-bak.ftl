@@ -1,4 +1,4 @@
-<#include "/lib/lib.html">
+<#include "/admin/common/common.ftl">
 <!DOCTYPE html>
 <html>
 <head>

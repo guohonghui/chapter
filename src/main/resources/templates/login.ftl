@@ -39,7 +39,7 @@
         <div>
         </div>
         <h3>权限管理</h3>
-        <form class="m-t" role="form" action="/admin/mylogin" method="post">
+        <form class="m-t" role="form" action="/loginForm" method="post">
             <div class="form-group">
                 <input type="text" class="form-control" name="username" value="test" placeholder="用户名" >
             </div>
@@ -52,11 +52,7 @@
                 </div>
             </#if>
             <button type="submit" class="btn btn-success block full-width m-b">登 录</button>
-
-
-            <p class="text-muted text-center"> <a href="login.html"><small>忘记密码了？</small></a> | <a href="/admin/register.html">注册一个新账号</a>
-            </p>
-
+            <p class="text-muted text-center"> <a href="login"><small>忘记密码了？</small></a> | <a href="/register">注册一个新账号</a></p>
         </form>
     </div>
 </div>

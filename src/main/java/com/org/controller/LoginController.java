@@ -2,11 +2,9 @@ package com.org.controller;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.org.base.BaseController;
-import com.org.utils.JsonResult;
 import com.org.entity.User;
-import com.org.service.IPermissionService;
 import com.org.service.IUserService;
-import com.org.vo.MenuVo;
+import com.org.utils.JsonResult;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -17,57 +15,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
- * 主页、登陆
+ * 用户登录和注册页面
  */
 @Controller
-@RequestMapping(value = "/admin")
-public class IndexController extends BaseController {
+public class LoginController extends BaseController {
 
-    @Autowired
-    private IPermissionService iPermissionService;
     @Autowired
     private IUserService iUserService;
     @Autowired
     private JavaMailSender mailSender;
-
-    // 主页
-    @RequestMapping(value = "/index")
-    public String index(Model model) {
-        // 获取当前用户菜单
-        List<MenuVo> menus = iPermissionService.createMenu(getCurrentLoginId());
-        model.addAttribute("menus",menus);
-        return "/admin/index";
-    }
-
-    /**
-     * 主页预览
-     * @return
-     */
-    @RequestMapping(value = "/index_1")
-    public String index_1() {
-        return "/md";
-    }
-
-    /**
-     * 登陆页面
-     * @return
-     */
-    @GetMapping("/login")
-    public String loginForm() {
-        return "/admin/login";
-    }
 
     /**
      * 登陆提交页面
@@ -76,7 +45,7 @@ public class IndexController extends BaseController {
      * @param map
      * @return
      */
-    @RequestMapping("/mylogin")
+    @RequestMapping("/loginForm")
     public String mylogin(String username, String password, Map<String, Object> map) {
         Subject subject = SecurityUtils.getSubject();
         UsernamePasswordToken token = new UsernamePasswordToken(username, password);
@@ -86,26 +55,17 @@ public class IndexController extends BaseController {
             String simpleName = e.getClass().getSimpleName();
             if ("UnknownAccountException".equals(simpleName)) {
                 map.put("msg", "用户不存在");
-                return "/admin/login";
+                return "/login";
             } else if("IncorrectCredentialsException".equals(simpleName)){
                 map.put("msg", "密码不正确");
-                return "/admin/login";
+                return "/login";
             }
         }
         boolean authenticated = subject.isAuthenticated();
         if (authenticated) {
-            return "redirect:/admin/index";
+            return "redirect:/index";
         }
-        return "redirect:/admin/login";
-    }
-
-    /**
-     * 用户注册界面
-     * @return
-     */
-    @GetMapping(value = "/register")
-    public String registerView() {
-        return "/admin/register";
+        return "redirect:/login";
     }
 
     /**
@@ -113,7 +73,7 @@ public class IndexController extends BaseController {
      * @return
      */
     @ResponseBody
-    @PostMapping(value = "/register")
+    @PostMapping(value = "/postRegister")
     public JsonResult register(User user, String code) {
         Subject subject = SecurityUtils.getSubject();
         Session session = subject.getSession();
@@ -204,7 +164,6 @@ public class IndexController extends BaseController {
         Session session = subject.getSession();
         session.setAttribute("code", code+"");
 
-        /*SimpleMailMessage message = new SimpleMailMessage();*/
         MimeMessage mimeMessage = mailSender.createMimeMessage();
 
         try {
@@ -220,12 +179,6 @@ public class IndexController extends BaseController {
             e.printStackTrace();
         }
 
-
-        /*message.setFrom("fanshuye1304@163.com");//发送者.
-        message.setTo(mail); // 接收者.
-        message.setSubject("Bing-Upms 注册验证"); // 邮件主题.
-        message.setText("<h1>验证码</h1>"); // 邮件内容.*/
-
         try {
             mailSender.send(mimeMessage); //发送邮件
             return renderSuccess("请查看邮箱验证码");
@@ -233,5 +186,4 @@ public class IndexController extends BaseController {
             return renderError("邮箱发送失败,请重新获取");
         }
     }
-
 }

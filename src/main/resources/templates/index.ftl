@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <title>后台权限管理</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+    <link rel="shortcut icon" href="${request.contextPath}/favicon.ico">
+    <link href="${request.contextPath}/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="${request.contextPath}/css/font-awesome.min.css?v=4.4.0" rel="stylesheet">
+    <link href="${request.contextPath}/css/animate.css" rel="stylesheet">
+    <link href="${request.contextPath}/css/style.css?v=4.1.0" rel="stylesheet">
+    <style>
+        #side-menu .profile-element {
+            text-align: center;
+        }
+        #side-menu .img-circle {
+            border-radius: 5px;
+        }
+        .pace .pace-progress {
+            background: #0e9aef;
+        }
+    </style>
+</head>
+<body class="fixed-sidebar full-height-layout gray-bg skin-1" style="overflow:hidden">
+    <div id="wrapper">
+        <!--左侧导航开始-->
+        <nav class="navbar-default navbar-static-side" role="navigation">
+            <div class="nav-close"><i class="fa fa-times-circle"></i>
+            </div>
+            <div class="sidebar-collapse">
+                <ul class="nav" id="side-menu">
+                    <li class="nav-header">
+                        <div class="dropdown profile-element">
+                            <span><img alt="image" class="img-circle" width="64" height="64" src="${request.contextPath}/img/profile_small-1.png" /></span>
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                                <span class="clear">
+                               <span class="block m-t-xs"><strong class="font-bold">欢迎，${user.username}登录！</strong></span>
+                                <span class="text-muted text-xs block">${user.nickname}<b class="caret"></b></span>
+                                </span>
+                            </a>
+                            <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                                <li><a class="J_menuItem" href="form_avatar.html">修改头像</a>
+                                </li>
+                                <li><a class="J_menuItem" href="profile.html">个人资料</a>
+                                </li>
+                                <li><a class="J_menuItem" href="contacts.html">联系我们</a>
+                                </li>
+                                <li><a class="J_menuItem" href="mailbox.html">信箱</a>
+                                </li>
+                                <li class="divider"></li>
+                                <li><a href="/logout">安全退出</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="logo-element">H+
+                        </div>
+                    </li>
+                    <!-- 菜单级别 -->
+                    <#list menus as menu>
+                    <li>
+                        <a href="javascript：void(0);">
+                            <i class="${menu.icon!}"></i>
+                            <span class="nav-label">${menu.name!}</span>
+                            <#if (menu.children?size>0) >
+                            <span class="fa arrow"></span>
+                            </#if>
+                        </a>
+                        <#if (menu.children?size>0)>
+                        <ul class="nav nav-second-level">
+                            <#list menu.children as children>
+                            <li>
+                                <a class="J_menuItem" href="${children.url!}"><i class="${children.icon!}"></i>${children.name!}</a>
+                            </li>
+                            </#list>
+                        </ul>
+                        </#if>
+                    </li>
+                    </#list>
+                </ul>
+            </div>
+        </nav>
+        <!--左侧导航结束-->
+        <!--右侧部分开始-->
+        <div id="page-wrapper" class="gray-bg dashbard-1">
+            <div class="row border-bottom">
+                <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+                    <div class="navbar-header"><a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
+                        <form role="search" class="navbar-form-custom" method="post" action="search_results.html">
+                            <div class="form-group">
+                                <input type="text" placeholder="请输入您需要查找的内容 …" class="form-control" name="top-search" id="top-search">
+                            </div>
+                        </form>
+                    </div>
+                    <ul class="nav navbar-top-links navbar-right">
+                        <li class="hidden-xs">
+                            <a href="/logout" class="J_tabExit" data-index="0"><i class="fa fa-sign-out"></i> 退出</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="row content-tabs">
+                <button class="roll-nav roll-left J_tabLeft"><i class="fa fa-backward"></i>
+                </button>
+                <nav class="page-tabs J_menuTabs">
+                    <div class="page-tabs-content">
+                        <a href="javascript:;" class="active J_menuTab" data-id="main">首页</a>
+                    </div>
+                </nav>
+                <button class="roll-nav roll-right J_tabRight"><i class="fa fa-forward"></i>
+                </button>
+                <div class="btn-group roll-nav roll-right">
+                    <button class="dropdown J_tabClose" data-toggle="dropdown">关闭操作<span class="caret"></span></button>
+                    <ul role="menu" class="dropdown-menu dropdown-menu-right">
+                        <li class="J_tabShowActive"><a>定位当前选项卡</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li class="J_tabCloseAll"><a>关闭全部选项卡</a>
+                        </li>
+                        <li class="J_tabCloseOther"><a>关闭其他选项卡</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row J_mainContent" id="content-main">
+                <iframe class="J_iframe" name="iframe0" width="100%" height="100%" src="main" frameborder="0" data-id="main" seamless></iframe>
+            </div>
+            <div class="footer">
+                <div class="pull-right">&copy; 2018-2019 <a href="https://gitee.com/mark-steven/chapter" target="_blank">后台管理系统</a>
+                </div>
+            </div>
+        </div>
+        <!--右侧部分结束-->
+    </div>
+
+    <!-- 全局js -->
+    <script src="${request.contextPath}/js/jquery.min.js?v=2.1.4"></script>
+    <script src="${request.contextPath}/js/bootstrap.min.js?v=3.3.6"></script>
+    <script src="${request.contextPath}/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+    <script src="${request.contextPath}/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+    <script src="${request.contextPath}/js/plugins/layer/layer.min.js"></script>
+    <!-- 自定义js -->
+    <script src="${request.contextPath}/js/hplus.js?v=4.1.0"></script>
+    <script type="text/javascript" src="${request.contextPath}/js/contabs.js"></script>
+    <!-- 第三方插件 -->
+    <script src="${request.contextPath}/js/plugins/pace/pace.min.js"></script>
+    <div class="theme-config">
+        <div class="theme-config-box">
+            <div class="spin-icon" id="theme-config">
+                <i class="fa fa-cogs fa-spin"></i>
+            </div>
+            <div class="skin-settings">
+                <div class="skin-setttings">
+                    <div class="title">主题设置</div>
+                    <div class="setings-item">
+                        <span>收起左侧菜单</span>
+                        <div class="switch">
+                            <div class="onoffswitch">
+                                <input type="checkbox" name="collapsemenu" class="onoffswitch-checkbox" id="collapsemenu">
+                                <label class="onoffswitch-label" for="collapsemenu">
+                                    <span class="onoffswitch-inner"></span>
+                                    <span class="onoffswitch-switch"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="setings-item">
+                        <span>固定顶部</span>
+                        <div class="switch">
+                            <div class="onoffswitch">
+                                <input type="checkbox" name="fixednavbar" class="onoffswitch-checkbox" id="fixednavbar">
+                                <label class="onoffswitch-label" for="fixednavbar">
+                                    <span class="onoffswitch-inner"></span>
+                                    <span class="onoffswitch-switch"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="setings-item">
+                        <span>固定宽度</span>
+                        <div class="switch">
+                            <div class="onoffswitch">
+                                <input type="checkbox" name="boxedlayout" class="onoffswitch-checkbox" id="boxedlayout">
+                                <label class="onoffswitch-label" for="boxedlayout">
+                                    <span class="onoffswitch-inner"></span>
+                                    <span class="onoffswitch-switch"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="title">皮肤选择</div>
+                    <div class="setings-item blue-skin nb">
+                        <span class="skin-name">
+                            <a href="#" class="s-skin-1">
+                                蓝色主题
+                            </a>
+                        </span>
+                    </div>
+                    <div class="setings-item yellow-skin nb">
+                        <span class="skin-name">
+                            <a href="#" class="s-skin-3">
+                                黄色/紫色主题
+                            </a>
+                        </span>
+                    </div>
+                    <div class="setings-item default-skin nb">
+                        <span class="skin-name ">
+                             <a href="#" class="s-skin-0">
+                                黑色/绿色主题
+                             </a>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -26,7 +26,6 @@ import java.util.Map;
 @Configuration
 public class ShiroConfig {
 
-
     /**
      *  Shiro 过滤器
      * @param securityManager
@@ -34,20 +33,19 @@ public class ShiroConfig {
      */
     @Bean
     public ShiroFilterFactoryBean shiroFilter(SecurityManager securityManager) {
-        log.info("ShiroConfiguration.shirFilter()");
         ShiroFilterFactoryBean shiroFilterFactoryBean  = new ShiroFilterFactoryBean();
         // SecurityManager
         shiroFilterFactoryBean.setSecurityManager(securityManager);
         // 登陆页面
-        shiroFilterFactoryBean.setLoginUrl("/admin/login");
+        shiroFilterFactoryBean.setLoginUrl("/login");
         // 登录成功后要跳转的链接
-        shiroFilterFactoryBean.setSuccessUrl("/admin/index");
+        shiroFilterFactoryBean.setSuccessUrl("/index");
         // 未授权界面
         shiroFilterFactoryBean.setUnauthorizedUrl("/500");
         // 拦截器.
-        Map<String,String> filterChainDefinitionMap = new LinkedHashMap<String,String>();
+        Map<String,String> filterChainDefinitionMap = new LinkedHashMap<>();
         // 配置退出过滤器,其中的具体的退出代码Shiro已经替我们实现了
-        filterChainDefinitionMap.put("/admin/logout", "logout");
+        filterChainDefinitionMap.put("/logout", "logout");
         // 过滤链
         filterChainDefinitionMap.put("/css/**", "anon");
         filterChainDefinitionMap.put("/fonts/**", "anon");
@@ -56,12 +54,12 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/plugins/**", "anon");
         filterChainDefinitionMap.put("/500", "perms");
         filterChainDefinitionMap.put("/favicon.ico", "anon");
-        filterChainDefinitionMap.put("/admin/mylogin", "anon");
-        filterChainDefinitionMap.put("/admin/register", "anon"); // 注册界面
-        filterChainDefinitionMap.put("/admin/register", "anon"); // 注册提交数据
-        filterChainDefinitionMap.put("/admin/sencCode", "anon"); // 发送邮箱验证码
-        filterChainDefinitionMap.put("/admin/isUsername/**", "anon"); // 判断用户名是否存在
-        filterChainDefinitionMap.put("/admin/isEmail/**", "anon"); // 判断邮箱是否存在
+        filterChainDefinitionMap.put("/loginForm", "anon");
+        filterChainDefinitionMap.put("/register", "anon"); // 注册界面
+        filterChainDefinitionMap.put("/postRegister", "anon"); // 注册提交数据
+        filterChainDefinitionMap.put("/sencCode", "anon"); // 发送邮箱验证码
+        filterChainDefinitionMap.put("/isUsername/**", "anon"); // 判断用户名是否存在
+        filterChainDefinitionMap.put("/isEmail/**", "anon"); // 判断邮箱是否存在
         filterChainDefinitionMap.put("/**", "authc");
         /**
          * anon:所有url都都可以匿名访问;

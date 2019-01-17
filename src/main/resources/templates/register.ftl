@@ -106,7 +106,7 @@
         layer.load();
 
         $.ajax({
-            url: "/admin/sencCode",
+            url: "/sencCode",
             data:  email,
             contentType: "application/json; charset=utf-8",
             type: "POST",
@@ -134,7 +134,7 @@
                         message: '用户名长度最多30个字符'
                     },
                     remote: {
-                        url: '/admin/isUsername',
+                        url: '/isUsername',
                         message: '用户名已存在'
                     }
                 }
@@ -148,7 +148,7 @@
                         message: '请输入有效的邮箱'
                     },
                     remote: {
-                        url: '/admin/isEmail',
+                        url: '/isEmail',
                         message: '邮箱已注册'
                     }
                 }
@@ -197,7 +197,7 @@
         e.preventDefault();
 
         $.ajax({
-            url: "/admin/register",
+            url: "/register",
             data:  $("#addForm").serialize(),
             type: "POST",
             dataType: 'json',

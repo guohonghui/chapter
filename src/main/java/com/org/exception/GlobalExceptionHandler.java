@@ -15,7 +15,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = org.apache.shiro.authz.UnauthorizedException.class)
     public ModelAndView defaultErrorHandler(HttpServletRequest request, HttpServletResponse response, Exception e) throws Exception {
-        response.sendRedirect("/500");
+        response.sendRedirect("/admin/common/500");
         ModelAndView mav = new ModelAndView();
         mav.addObject("exception", e);
         mav.addObject("url", request.getRequestURL());
