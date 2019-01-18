@@ -60,6 +60,7 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/sencCode", "anon"); // 发送邮箱验证码
         filterChainDefinitionMap.put("/isUsername/**", "anon"); // 判断用户名是否存在
         filterChainDefinitionMap.put("/isEmail/**", "anon"); // 判断邮箱是否存在
+        filterChainDefinitionMap.put("/isNickname/**", "anon"); // 判断昵称是否存在
         filterChainDefinitionMap.put("/**", "authc");
         /**
          * anon:所有url都都可以匿名访问;

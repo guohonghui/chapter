@@ -63,6 +63,9 @@
                 <input type="text" class="form-control" name="username" placeholder="请输入用户名">
             </div>
             <div class="form-group">
+                <input type="text" class="form-control" name="nickname" placeholder="请输入昵称">
+            </div>
+            <div class="form-group">
                 <input type="password" class="form-control" name="password" placeholder="请输入密码">
             </div>
             <div class="form-group">
@@ -139,6 +142,21 @@
                     }
                 }
             },
+            nickname: {
+                validators: {
+                    notEmpty: {
+                        message: '昵称不能为空'
+                    },
+                    stringLength: {
+                        max: 30,
+                        message: '昵称长度最多30个字符'
+                    },
+                    remote: {
+                        url: '/isNickname',
+                        message: '昵称已存在'
+                    }
+                }
+            },
             email: {
                 validators: {
                     notEmpty: {
@@ -185,25 +203,21 @@
                         max: 30,
                         message: '用户名长度最多30个字符'
                     },
-                    /*remote: {
-                        url: 'remote.php',
-                        message: 'The username is not available'
-                    },*/
                 }
             },
         }
     }).on('success.form.bv', function(e) {
-        // Prevent form submission
         e.preventDefault();
 
         $.ajax({
-            url: "/register",
+            url: "/postRegister",
             data:  $("#addForm").serialize(),
             type: "POST",
             dataType: 'json',
             success: function(data){
                 if (data.success) {
-                    parent.layer.msg(data.msg, {icon: 1});
+                    parent.layer.msg(data.msg, {time: 1500,icon: 1});
+                    location.href="/login"
                 } else {
                     parent.layer.msg(data.msg, {time: 1500, icon:5});
                 }

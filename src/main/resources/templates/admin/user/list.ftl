@@ -115,6 +115,10 @@
                     </label>
                     <label>
                         <input type="radio" name="status" value="0">
+                        <span>待审</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="status" value="-1">
                         <span>禁用</span>
                     </label>
                 </div>
@@ -152,6 +156,10 @@
                     </label>
                     <label>
                         <input type="radio" name="status" value="0">
+                        <span>待审</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="status" value="-1">
                         <span>禁用</span>
                     </label>
                 </div>
@@ -258,12 +266,12 @@
                         title: '状态',
                         align: 'center',
                         formatter: function(value,row,index){
-                            if (value == 0) {
+                            if (value == -1) {
                                 return '<span class="label label-danger">禁用</span>';
                             } else if (value == 1) {
                                 return '<span class="label label-primary">启用</span>';
                             }
-                            else if (value == 5) {
+                            else if (value == 0) {
                                 return '<span class="label label-primary">待审核</span>';
                             }
                             return "其他";
@@ -489,13 +497,13 @@
             $("#optionUserStatus").click(function () {
                 var $result = $('#userTableEvents');
                 var list = $result.bootstrapTable('getSelections');
-                if (list.length <= 0) {
+                if (list.length <= 0 || list.length > 1) {
                     parent.layer.msg('请至少选中一条数据', {time: 1500, icon:5});
                     return;
                 }
 
                 for (var item in list) {
-                    if(list[item].status != 5 ) {
+                    if(list[item].status != 0 ) {
                         parent.layer.msg('请选择待审核用户', {time: 1500, icon:5});
                         return;
                     }

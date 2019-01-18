@@ -20,35 +20,26 @@
 
 	<!-- 查询父菜单 -->
 	<select id="findParentMenu" resultMap="BaseResultMap">
-		SELECT * from permission WHERE id in
-		(
-		select pid from role_permission WHERE rid in
-		(
-		select rid from user_role INNER JOIN role on user_role.rid = role.id where uid = #{0} and status = 1
-		)
-		) and status = 1 and type = 0
+		select t1.* from permission t1
+			left join role_permission t2 on t1.id = t2.pid
+			left join user_role t3 on t2.rid =t3.rid
+			where t3.uid = #{uid} and t1.status = 1 and t1.type = 0
 	</select>
 
 	<!-- 查询子菜单 -->
 	<select id="findSubMenu" resultMap="BaseResultMap">
 		SELECT * from permission WHERE id in
-		(
-		select pid from role_permission WHERE rid in
-		(
-		select rid from user_role INNER JOIN role on user_role.rid = role.id where uid = #{uid} and status = 1
-		)
+		(select pid from role_permission WHERE rid in
+		(select rid from user_role INNER JOIN role on user_role.rid = role.id where uid = #{uid} and status = 1)
 		) and status = 1 and type = 1 and pid = #{pid}
 	</select>
 
 	<!--查询用户拥有那些权限-->
 	<select id="findUserPermission" resultMap="BaseResultMap">
-		SELECT * from permission WHERE id in
-		(
-		select pid from role_permission WHERE rid in
-		(
-		select rid from user_role INNER JOIN role on user_role.rid = role.id where uid = #{0} and status = 1
-		)
-		) and status = 1 and type in (1,2)
+		select t1.* from permission t1
+			left join role_permission t2 on  t1.id = t2.rid
+			left join user_role t3 on t2.rid = t3.rid
+			where t3.uid = #{uid} and t1.status = 1 and t1.type in (1,2)
 	</select>
 
 

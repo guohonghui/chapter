@@ -29,7 +29,7 @@ public class User extends BaseEntity {
 	@ApiModelProperty(value = "邮箱")
 	private String email;
 
-	@ApiModelProperty(value = "0、禁用 1、正常")
+	@ApiModelProperty(value = "-1、禁用0、待审 1、正常")
 	private Integer status;
 
 }

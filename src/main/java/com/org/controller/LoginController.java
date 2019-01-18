@@ -5,6 +5,7 @@ import com.org.base.BaseController;
 import com.org.entity.User;
 import com.org.service.IUserService;
 import com.org.utils.JsonResult;
+import com.sun.mail.imap.protocol.ID;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -24,6 +25,7 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -85,13 +87,15 @@ public class LoginController extends BaseController {
         if (!sessionCode.equals(code)) {
             return renderError("验证码错误");
         }
-        user.setStatus(5); // 状态待审核
+
         // 创建盐, 散列加密
         String salt = String.valueOf(System.currentTimeMillis());
         SimpleHash password = new SimpleHash("MD5", user.getPassword(), salt);
+        user.setStatus(0); // 状态待审核
+        user.setGmtModified(new Date());
+        user.setGmtCreate(new Date());
         user.setSalt(salt); // 设置盐
         user.setPassword(password.toString()); // 设置密码
-        user.setNickname(user.getUsername()); // 设置昵称
         return iUserService.insert(user) ? renderSuccess("注册成功") : renderSuccess("注册失败");
     }
 
@@ -110,6 +114,26 @@ public class LoginController extends BaseController {
 
         User user = iUserService.selectOne(wrapper);
 
+        if (user == null) {
+            map.put("valid", true);
+        } else {
+            map.put("valid", false);
+        }
+        return map;
+    }
+
+    /**
+     * 判断昵称是否存在
+     * @param nickname
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/isNickname")
+    public Map<String,Object> isNickname(String nickname){
+        Map<String,Object> map = new HashMap<>();
+        EntityWrapper<User> wrapper = new EntityWrapper<>();
+        wrapper.eq("nickname",nickname);
+        User user = iUserService.selectOne(wrapper);
         if (user == null) {
             map.put("valid", true);
         } else {
